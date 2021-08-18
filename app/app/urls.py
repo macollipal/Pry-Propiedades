@@ -26,6 +26,7 @@ urlpatterns = [
     path('prop/',include(('prop.urls', 'prop'), namespace='prop')),
     path('risk/',include(('risk.urls', 'risk'), namespace='risk')),
     path('eval/',include(('eval.urls', 'eval'), namespace='eval')),
+    
     #path('cli/',include(('cli.urls', 'cli'), namespace='cli')),
     #path('cmp/',include(('cmp.urls', 'cmp'), namespace='cmp')),
     

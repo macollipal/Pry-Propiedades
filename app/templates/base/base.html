@@ -69,6 +69,7 @@
       {% url 'prop:propiedad_list' as prop_url %}
       {% url 'risk:riesgo_list' as risk_url %}
       {% url 'eval:eval_list' as eval_url %}
+      {% url 'eval:eval_per_list' as eval_per_url %}
       
 
 
@@ -88,6 +89,8 @@
             <a class="collapse-item {% if risk_url in request.path %} active {% endif %}" href="{{risk_url}}">Riesgos</a>
 
             <a class="collapse-item {% if eval_url in request.path %} active {% endif %}" href="{{eval_url}}">Evaluacion</a>
+
+            <a class="collapse-item {% if eval_per_url in request.path %} active {% endif %}" href="{{eval_per_url}}">Periodo</a>
             
             
           </div>

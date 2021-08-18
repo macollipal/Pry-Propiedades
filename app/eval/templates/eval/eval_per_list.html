@@ -5,7 +5,7 @@
     <!-- Card Header - Dropdown -->
     <div
         class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-        <h6 class="m-0 font-weight-bold text-primary">Listado de Evaluaciones</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Listado de Periodos</h6>
         <div class="dropdown no-arrow">
             <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -13,31 +13,30 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                 <div class="dropdown-header">Acciones</div>
-                <a class="dropdown-item" href="{% url 'eval:eval_new' %}"><i class="far fa-calendar-plus"></i> Nueva</a>
+                <a class="dropdown-item" onclick="return abrir_modal('{% url 'eval:eval_per_new' %}')" href=""><i class="far fa-calendar-plus"></i> Nuevo</a>
             </div>
         </div>
     </div>
     <!-- Card Body -->
     <div class="card-body">
         {% if not obj %}
-           <div class="alert alert-info">No hay Evaluaciones</div>
+           <div class="alert alert-info">No hay Periodos</div>
         {% else %}
         <table class="table table-striped table-hover">
             <thead>
-                <th>Fecha</th>
-                <th>Obs</th>
+                <th>Periodos</th>
                 <th>Estado</th>
                 <th class="all">Acciones</th>
             </thead>
             <tbody>
                 {%  for item in obj %}
                 <tr>
-                    <td>{{ item.fecha_eval.fecha_eval | date:"d/m/Y" }}</td>
-                    <td>{{ item.observacion }}</td>
+                    <td>{{ item.fecha_eval | date:"d/m/Y" }}</td>
                     <td>{{ item.estado|yesno:"Activo,Inactivo"}}</td>
                     <td>
-                        <a class="btn btn-warning btn-circle" href="{% url 'eval:eval_edit' item.id %}"><i class="far fa-edit"></i></a>
-                        <a class="btn btn-danger btn-circle" href="{% url 'eval:evaluacion_inactivar' item.id %}" class="btn btn-danger btn-circle" role="button"><i class="far fa-thumbs-down"></i></a>
+                        <button class="btn btn-warning btn-circle" onclick="return abrir_modal('{% url 'eval:eval_per_edit' item.id %}')" >
+                            <i class="far fa-edit"></i></button>
+                            <a href="{% url 'eval:evaluacion_per_inactivar' item.id %}" class="btn btn-danger btn-circle" role="button"><i class="far fa-thumbs-down"></i></a>
                     </td>
                 </tr>
                 {% endfor %}

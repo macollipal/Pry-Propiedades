@@ -30,7 +30,7 @@ class RiesgoNew(LoginRequiredMixin, generic.CreateView):
     template_name = "risk/risk_form.html"
     context_object_name = "obj"
     form_class = RiesgoForm
-    success_url =reverse_lazy("risk:risk_list")
+    success_url =reverse_lazy("risk:riesgo_list")
     login_url = 'bases:login'
 
     def form_valid(self, form):
@@ -42,7 +42,7 @@ class RiesgoEdit(LoginRequiredMixin, generic.UpdateView):
     template_name = "risk/risk_form.html"
     context_object_name = "obj"
     form_class = RiesgoForm
-    success_url =reverse_lazy("risk:risk_list")
+    success_url =reverse_lazy("risk:riesgo_list")
     login_url = 'bases:login'
 
     def form_valid(self, form):
@@ -55,7 +55,7 @@ def riesgo_inactivar(request, id):
     template_name="risk/risk_del.html"
 
     if not riesgo:
-        return redirect("risk:risk_list")
+        return redirect("risk:riesgo_list")
 
     if request.method == 'GET':
         contexto = {'obj' :riesgo}
@@ -63,6 +63,6 @@ def riesgo_inactivar(request, id):
     if request.method == 'POST':
         riesgo.estado=False
         riesgo.save()
-        return redirect("risk:risk_list")
+        return redirect("risk:riesgo_list")
 
     return render(request, template_name, contexto)
