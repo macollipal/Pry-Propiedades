@@ -1,3 +1,4 @@
+
 from django.shortcuts import render, redirect
 from typing import Generic
 from django.shortcuts import render, redirect
@@ -11,8 +12,11 @@ from django.views import generic
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Evaluacion, EvaluacionPeriodo
-from eval.forms import EvaluacionForm, EvaluacionPeriodoForm
+from .models import EvaluacionPeriodo, Evaluacion, EvaluacionDet
+
+from prop.models import Propiedad
+
+from eval.forms import EvaluacionPeriodoForm, EvaluacionForm,  EvaluacionDetalleForm
 
 
 class EvalPerView(LoginRequiredMixin, generic.ListView):
@@ -78,32 +82,6 @@ class EvalView(LoginRequiredMixin, generic.ListView):
     login_url = 'bases:login'
 
 
-'''
-class EvalNew(LoginRequiredMixin, generic.CreateView):
-    model = Evaluacion
-    template_name = "eval/eval_form.html"
-    context_object_name = "obj"
-    form_class = EvaluacionForm
-    success_url =reverse_lazy("eval:eval_list")
-    login_url = 'bases:login'
-
-    def form_valid(self, form):
-        form.instance.created_by = self.request.user 
-        return super().form_valid(form)
-
-class EvalEdit(LoginRequiredMixin, generic.UpdateView):
-    model = Evaluacion
-    template_name = "eval/eval_form.html"
-    context_object_name = "obj"
-    form_class = EvaluacionForm
-    success_url =reverse_lazy("eval:eval_list")
-    login_url = 'bases:login'
-
-    def form_valid(self, form):
-        form.instance.modified_by = self.request.user.id
-        return super().form_valid(form)
-'''
-
 
 def evaluacion_inactivar(request, id):
     evaluacion = Evaluacion.objects.filter(pk=id).first()
@@ -128,34 +106,42 @@ def evaluacion_inactivar(request, id):
 
 def evaluaciones_fct(request, evaluacion_id=None):
     template_name = "eval/eval_form.html"
-    # obj_eva = Evaluacion.objects.filter(estado=True)
+    obj_prop = Propiedad.objects.filter(estado=True)
     form_eval = {}
+    form_detalle ={}
     contexto = {}
 #GET-------------------------------------------------------------------------------------------
     if request.method == 'GET':
         form_eval = EvaluacionForm()
+        form_detalle =EvaluacionDetalleForm()
+
         enc = Evaluacion.objects.filter(pk=evaluacion_id).first()
+        #det= EvaluacionDet.objects.filter(pk=evaluacion_id).first()
 
         if enc:
-            # det = ComprasDet.objects.filter(compra=enc)
-
+            det = EvaluacionDet.objects.filter(evaluacion=enc.pk)
             #fecha_eval = datetime.date.isoformat(enc.fecha_eval)
             fecha_eval = enc.fecha_eval
-            # fecha_factura = datetime.date.isoformat(enc.fecha_factura)
             e = {
                 'fecha_eval': fecha_eval,
                 'observacion': enc.observacion
             }
 
             form_eval = EvaluacionForm(e)
+
+            #form_detalle = EvaluacionDetalleForm(det)
         else:
             det = None
 
-        contexto = {'encabezado': enc, 'form_enc': form_eval}
+        contexto = {'propiedad':obj_prop,'encabezado': enc, 'detalle':det, 'form_enc': form_eval}
 #POST-------------------------------------------------------------------------------------------
     if request.method == 'POST':
         fecha_eval = request.POST.get("fecha_eval")
         observacion = request.POST.get("observacion")
+
+        
+        direccion = request.POST.get("direccion")
+        riesgo = request.POST.get("riesgo")
     
 #-------Guardar
         if not evaluacion_id:
@@ -166,9 +152,23 @@ def evaluaciones_fct(request, evaluacion_id=None):
                 observacion = observacion,
                 created_by = request.user
             )
+            
+            det = EvaluacionDet(
+                evaluacion_id =2,
+                propiedad_id = 1,
+                riesgo= 1,
+                created_by = request.user
+            )
+
+            
+            
             if enc:
                 enc.save()
                 evaluacion_id = enc.id
+            
+            if det:
+                det.save()
+                #evaluacion_id = enc.id
 #-------Actualizar        
         else:
             evaper  =EvaluacionPeriodo.objects.get(pk=fecha_eval)

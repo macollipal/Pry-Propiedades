@@ -54,3 +54,20 @@ class EvaluacionDet(ClaseModelo):
     evaluacion=models.ForeignKey(Evaluacion,on_delete=models.CASCADE)
     propiedad=models.ForeignKey(Propiedad,on_delete=models.CASCADE)
     riesgo=models.FloatField(default=0)
+
+    def __str__(self):
+        return '{}'.format(self.evaluacion)
+
+    def save(self):
+    #    self.riesgo = self.riesgo.upper()
+        #if self.sub_total == None  or self.descuento == None:
+        #    self.sub_total = 0
+        #    self.descuento = 0
+            
+        #self.riesgo = self.riesgo
+        
+        super(EvaluacionDet,self).save()
+
+    class Meta:
+        verbose_name_plural = "EvaluacionesDetalles"
+        verbose_name="EvaluacionDetalle"
